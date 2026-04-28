@@ -22,3 +22,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GEMINI_MODEL: gemini-2.5-flash  # 可选，默认 gemini-2.5-flash
           EXCLUDE: "*.md,*.txt,package-lock.json,*.yml,*.yaml"
+          
