@@ -1,25 +1,33 @@
-name: Gemini AI Code Review
-
+name: AI Code Review (Gemini)
 on:
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
+    types: [opened, synchronize]
 
+# 必须权限
 permissions:
-  contents: read
   pull-requests: write
+  contents: read
 
 jobs:
-  review:
+  code-review:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4.2.2
+      # 修复 Node.js 20 弃用警告
+      - name: Enable Node.js 24
+        run: echo "FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true" >> $GITHUB_ENV
 
-      - name: Gemini AI Code Review
-        uses: truongnh1992/gemini-ai-code-reviewer@v9.2.1
+      - uses: actions/checkout@v4
+
+      # 使用 Python 3.11 消除版本警告
+      - uses: actions/setup-python@v5
         with:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GEMINI_MODEL: gemini-2.5-flash  # 可选，默认 gemini-2.5-flash
-          EXCLUDE: "*.md,*.txt,package-lock.json,*.yml,*.yaml"
-          
+          python-version: "3.11"
+
+      # 真正支持自动 PR 审查的 Action
+      - name: Gemini Code Review
+        uses: qxo-oss/gemini-code-review-action@v1
+        with:
+          gemini-api-key: ${{ secrets.GEMINI_API_KEY }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          # 可自定义审查语言：zh-CN / en
+          language: zh-CN
