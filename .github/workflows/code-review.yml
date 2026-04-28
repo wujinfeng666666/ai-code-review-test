@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Gemini AI Code Review
         uses: truongnh1992/gemini-ai-code-reviewer@v9.2.1
